@@ -1,12 +1,13 @@
 package com.example.product_management_api.service;
 
-
 import com.example.product_management_api.entity.Product;
 import com.example.product_management_api.entity.dto.ProductDTO;
 import com.example.product_management_api.exception.ProductDataAlreadyExistsException;
 import com.example.product_management_api.exception.ProductNotFoundException;
 import com.example.product_management_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,24 +23,28 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Cacheable("products")
     public List<Product> findAll() {
         return productRepository.findAll();
     }
 
+    @Cacheable(value = "products", key = "#id")
     public Optional<Product> findById(Long id) {
-        return Optional.ofNullable(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
+        return productRepository.findById(id)
+                .or(() -> {
+                    throw new ProductNotFoundException(id);
+                });
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     public Product save(ProductDTO productDTO) {
-        var walletDb = productRepository.findByDescriptionOrBarcode(productDTO.description(), productDTO.barcode());
-
-        if(walletDb.isPresent()) {
-            throw  new ProductDataAlreadyExistsException("Description or Email already exists");
+        if (productRepository.findByDescriptionOrBarcode(productDTO.description(), productDTO.barcode()).isPresent()) {
+            throw new ProductDataAlreadyExistsException("Description or Barcode already exists");
         }
-
         return productRepository.save(productDTO.toProduct());
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     public Product updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
@@ -52,9 +57,10 @@ public class ProductService {
         return productRepository.save(existingProduct);
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     public void deleteProduct(Long id) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(id));
 
         productRepository.delete(existingProduct);
     }
