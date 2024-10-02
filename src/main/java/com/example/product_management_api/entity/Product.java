@@ -40,6 +40,16 @@ public class Product {
     @Column(name = "registration_date", updatable = false)
     private LocalDateTime registrationDate;
 
+    public Product() {
+    }
+
+    public Product(String description, String barcode, Double unitPrice, String unitOfMeasure) {
+        this.description = description;
+        this.barcode = barcode;
+        this.unitPrice = unitPrice;
+        this.unitOfMeasure = unitOfMeasure;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.registrationDate = LocalDateTime.now();

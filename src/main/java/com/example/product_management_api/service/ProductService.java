@@ -2,6 +2,7 @@ package com.example.product_management_api.service;
 
 
 import com.example.product_management_api.entity.Product;
+import com.example.product_management_api.entity.dto.ProductDTO;
 import com.example.product_management_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,19 +28,24 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public Product save(ProductDTO productDTO) {
+        var walletDb = productRepository.findByDescriptionOrBarcode(productDTO.description(), productDTO.barcode());
+
+        if(walletDb.isPresent()) {
+            throw  new RuntimeException("Description or Email already exists");
+        }
+
+        return productRepository.save(productDTO.toProduct());
     }
 
-    public Product updateProduct(Long id, Product productDetails) {
+    public Product updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado com o ID: " + id));
 
-        existingProduct.setDescription(productDetails.getDescription());
-        existingProduct.setBarcode(productDetails.getBarcode());
-        existingProduct.setUnitPrice(productDetails.getUnitPrice());
-        existingProduct.setUnitOfMeasure(productDetails.getUnitOfMeasure());
-        existingProduct.setRegistrationDate(productDetails.getRegistrationDate());
+        existingProduct.setDescription(productDTO.description());
+        existingProduct.setBarcode(productDTO.barcode());
+        existingProduct.setUnitPrice(productDTO.unitPrice());
+        existingProduct.setUnitOfMeasure(productDTO.unitOfMeasure());
 
         return productRepository.save(existingProduct);
     }
