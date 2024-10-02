@@ -7,3 +7,6 @@ spring:
     hibernate:
       ddl-auto: update # ou create, create-drop, none, dependendo da sua necessidade
     show-sql: true
+springdoc:
+  swagger-ui:
+    use-root-path: true
