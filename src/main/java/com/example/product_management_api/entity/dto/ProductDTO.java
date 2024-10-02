@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 public record ProductDTO(
                          @NotBlank String description,
                          @NotBlank String barcode,
-                         @Positive Double unitPrice,
+                         @NotNull @Positive  Double unitPrice,
                          @NotBlank String unitOfMeasure) {
     public Product toProduct() {
         return new Product(

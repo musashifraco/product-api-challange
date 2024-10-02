@@ -3,6 +3,8 @@ package com.example.product_management_api.service;
 
 import com.example.product_management_api.entity.Product;
 import com.example.product_management_api.entity.dto.ProductDTO;
+import com.example.product_management_api.exception.ProductDataAlreadyExistsException;
+import com.example.product_management_api.exception.ProductNotFoundException;
 import com.example.product_management_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +27,14 @@ public class ProductService {
     }
 
     public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+        return Optional.ofNullable(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
     }
 
     public Product save(ProductDTO productDTO) {
         var walletDb = productRepository.findByDescriptionOrBarcode(productDTO.description(), productDTO.barcode());
 
         if(walletDb.isPresent()) {
-            throw  new RuntimeException("Description or Email already exists");
+            throw  new ProductDataAlreadyExistsException("Description or Email already exists");
         }
 
         return productRepository.save(productDTO.toProduct());
@@ -40,7 +42,7 @@ public class ProductService {
 
     public Product updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(id));
 
         existingProduct.setDescription(productDTO.description());
         existingProduct.setBarcode(productDTO.barcode());
