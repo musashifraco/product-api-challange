@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://0.0.0.0:5432/product_database
+    username: postgres # substitua pelo seu nome de usuário do PostgreSQL
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: update # ou create, create-drop, none, dependendo da sua necessidade
+    show-sql: true
