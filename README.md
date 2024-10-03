@@ -17,7 +17,7 @@ Para executar o projeto, siga os passos abaixo:
 1. Navegue até a pasta do Docker Compose:
 
    ```bash
-   cd database-docker
+   cd docker
 
 2. Execute o comando para iniciar os containers:
 

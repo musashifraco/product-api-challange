@@ -35,4 +35,4 @@ build/
 .idea/
 
 # Ignorar arquivos de dados do banco de dados
-database-docker/postgres-data/
+docker/postgres-data/
