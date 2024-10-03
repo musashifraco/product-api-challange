@@ -35,7 +35,5 @@ class ProductTest {
         assertEquals(1, violations.size());
         assertEquals("A descrição é obrigatória", violations.iterator().next().getMessage());
     }
-
-    // Adicione mais testes conforme necessário para outros campos
 }
 

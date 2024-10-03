@@ -38,7 +38,7 @@ class ProductExceptionTest {
 
     @Test
     void productException_shouldReturnDefaultProblemDetail() {
-        ProductException exception = new ProductException() {}; // Classe anônima para instanciar a classe abstrata
+        ProductException exception = new ProductException() {};
         ProblemDetail problemDetail = exception.toProblemDetail();
 
         assertEquals("Product internal server error", problemDetail.getTitle());

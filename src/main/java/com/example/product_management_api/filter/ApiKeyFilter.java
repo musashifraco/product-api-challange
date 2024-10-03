@@ -10,7 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component("apiKeyFilter") // Especifica o nome do bean
+@Component("apiKeyFilter")
 public class ApiKeyFilter extends OncePerRequestFilter {
 
     @Value("${api.key}")

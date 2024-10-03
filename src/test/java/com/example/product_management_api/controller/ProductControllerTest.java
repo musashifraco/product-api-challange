@@ -43,7 +43,6 @@ class ProductControllerTest {
         productList = new ArrayList<>();
         productList.add(new Product("Product 1", "0000", 100.0, ""));
 
-        // Configurando o mock para o RedisTemplate
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
     }
 
@@ -66,7 +65,7 @@ class ProductControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Updated Product", response.getBody().getDescription());
-        verify(redisTemplate).delete("products"); // Corrigido aqui
+        verify(redisTemplate).delete("products");
     }
 
     @Test
@@ -91,7 +90,7 @@ class ProductControllerTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("New Product", response.getBody().getDescription());
-        verify(redisTemplate).delete("products"); // Corrigido aqui
+        verify(redisTemplate).delete("products");
     }
 
     @Test
@@ -103,7 +102,7 @@ class ProductControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("desssasdasd", response.getBody().getDescription());
-        verify(redisTemplate).delete("products"); // Corrigido aqui
+        verify(redisTemplate).delete("products");
     }
 
     @Test
@@ -113,7 +112,7 @@ class ProductControllerTest {
         ResponseEntity<Void> response = productController.deleteProduct(1L);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(redisTemplate).delete("products"); // Corrigido aqui
+        verify(redisTemplate).delete("products");
     }
 
     @Test
